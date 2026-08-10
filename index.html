@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Nang Jensss</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Georgia, "Times New Roman", serif;
+    background: #000;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    background-image: url("./images/thousand_sunny.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.25)
+    );
+}
+
+.title-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.35),
+            rgba(0, 0, 0, 0.65)
+        ),
+        url("./images/thousand_sunny.png");
+    background-size: cover;
+    background-position: center;
+    transition: opacity 1s ease;
+}
+
+.title-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.title {
+    color: white;
+    font-size: clamp(42px, 7vw, 90px);
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(255, 255, 255, 0.15);
+}
+
+.subtitle {
+    color: #f4e7c5;
+    font-size: clamp(16px, 2vw, 25px);
+    margin-top: 12px;
+    font-style: italic;
+}
+
+.play-button,
+.home-button {
+    margin-top: 45px;
+    padding: 15px 55px;
+    border: 2px solid white;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.35);
+    color: white;
+    font-size: 20px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.play-button:hover,
+.home-button:hover {
+    background: white;
+    color: black;
+    transform: scale(1.05);
+}
+
+.characters {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.character {
+    position: absolute;
+    bottom: 17%;
+    max-height: 72%;
+    max-width: 42%;
+    object-fit: contain;
+    object-position: bottom center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease,
+        filter 0.3s ease;
+    filter: brightness(0.65);
+}
+
+.character.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.character.active {
+    filter: brightness(1);
+}
+
+.character.left {
+    left: 7%;
+}
+
+.character.center {
+    left: 50%;
+    transform: translate(-50%, 40px);
+}
+
+.character.center.show {
+    transform: translate(-50%, 0);
+}
+
+.character.right {
+    right: 7%;
+}
+
+.dialogue-area {
+    position: absolute;
+    left: 3%;
+    right: 3%;
+    bottom: 2%;
+    z-index: 10;
+    display: none;
+}
+
+.name-box {
+    display: inline-block;
+    min-width: 130px;
+    padding: 8px 22px;
+    background: rgba(15, 15, 15, 0.92);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-bottom: none;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.dialogue-box {
+    min-height: 125px;
+    padding: 25px 30px;
+    background: rgba(8, 8, 8, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: white;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+}
+
+.dialogue-text {
+    font-size: clamp(17px, 2vw, 25px);
+    line-height: 1.55;
+}
+
+.next-indicator {
+    position: absolute;
+    right: 25px;
+    bottom: 15px;
+    font-size: 18px;
+    opacity: 0.7;
+    animation: pulse 1.2s infinite;
+}
+
+.choice-area {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.choice-area.show {
+    display: flex;
+}
+
+.choice-button {
+    pointer-events: auto;
+    min-width: 220px;
+    padding: 18px 40px;
+    border: 2px solid white;
+    border-radius: 5px;
+    background: rgba(10, 10, 10, 0.88);
+    color: white;
+    font-family: inherit;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    animation: choiceAppear 0.7s ease;
+}
+
+.choice-button:hover {
+    background: white;
+    color: black;
+    transform: scale(1.06);
+}
+
+.ending {
+    position: absolute;
+    inset: 0;
+    z-index: 25;
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    background-image:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.82),
+            rgba(0, 0, 0, 0.05) 60%,
+            rgba(0, 0, 0, 0.05)
+        ),
+        url("./images/final_feast.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0 30px 6%;
+}
+
+.ending.show {
+    display: flex;
+    animation: endingAppear 1.5s ease forwards;
+}
+
+.ending-title {
+    color: white;
+    font-size: clamp(38px, 7vw, 90px);
+    font-weight: bold;
+    text-shadow: 0 5px 20px black;
+}
+
+.ending-subtitle {
+    margin-top: 15px;
+    color: white;
+    font-size: clamp(17px, 2.5vw, 28px);
+    text-shadow: 0 3px 10px black;
+}
+
+.home-button {
+    margin-top: 30px;
+    padding: 12px 35px;
+    font-size: 16px;
+}
+
+.loading-message {
+    position: absolute;
+    bottom: 12%;
+    color: white;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.loading-message.show {
+    opacity: 0.8;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes choiceAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes endingAppear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .character {
+        max-width: 60%;
+        max-height: 60%;
+        bottom: 24%;
+    }
+
+    .character.left {
+        left: 2%;
+    }
+
+    .character.right {
+        right: 2%;
+    }
+
+    .dialogue-area {
+        left: 2%;
+        right: 2%;
+        bottom: 2%;
+    }
+
+    .dialogue-box {
+        min-height: 115px;
+        padding: 20px;
+    }
+
+    .name-box {
+        font-size: 17px;
+    }
+
+    .dialogue-text {
+        font-size: 17px;
+    }
+
+    .ending {
+        padding-bottom: 8%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .ending-title {
+        font-size: 40px;
+    }
+
+    .ending-subtitle {
+        font-size: 17px;
+    }
+
+    .home-button {
+        margin-top: 20px;
+        padding: 11px 28px;
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <div class="background"></div>
+
+    <div class="title-screen" id="titleScreen">
+
+        <div class="title">
+            A Birthday Adventure
+        </div>
+
+        <div class="subtitle">
+            A little journey across the Grand Line of Iloilo
+        </div>
+
+        <button class="play-button" id="playButton">
+            PLAY GAME
+        </button>
+
+        <div class="loading-message" id="loadingMessage">
+            Preparing the adventure...
+        </div>
+
+    </div>
+
+    <div class="characters">
+
+        <img
+            id="sanji"
+            class="character left"
+            src="./images/sanji_neutral.png"
+            alt="Sanji"
+        >
+
+        <img
+            id="robin"
+            class="character center"
+            src="./images/robin_neutral.png"
+            alt="Robin"
+        >
+
+        <img
+            id="luffy"
+            class="character right"
+            src="./images/luffy_shocked.png"
+            alt="Luffy"
+        >
+
+        <img
+            id="nami"
+            class="character right"
+            src="./images/nami_smiling.png"
+            alt="Nami"
+        >
+
+        <img
+            id="zoro"
+            class="character left"
+            src="./images/zoro_neutral.png"
+            alt="Zoro"
+        >
+
+        <img
+            id="usopp"
+            class="character left"
+            src="./images/usopp_talking.png"
+            alt="Usopp"
+        >
+
+        <img
+            id="chopper"
+            class="character center"
+            src="./images/chopper_happy.png"
+            alt="Chopper"
+        >
+
+        <img
+            id="franky"
+            class="character left"
+            src="./images/franky_excited.png"
+            alt="Franky"
+        >
+
+        <img
+            id="brook"
+            class="character right"
+            src="./images/brook_celebrating.png"
+            alt="Brook"
+        >
+
+    </div>
+
+    <div class="dialogue-area" id="dialogueArea">
+
+        <div class="name-box" id="nameBox">
+            Sanji
+        </div>
+
+        <div class="dialogue-box" id="dialogueBox">
+
+            <div class="dialogue-text" id="dialogueText"></div>
+
+            <div class="next-indicator">
+                ▼
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="choice-area" id="choiceArea">
+
+        <button class="choice-button" id="specialButton">
+            SPECIAL?
+        </button>
+
+    </div>
+
+    <div class="ending" id="ending">
+
+        <div class="ending-title">
+            HAPPY BIRTHDAY!
+        </div>
+
+        <div class="ending-subtitle">
+            From everyone aboard the Thousand Sunny 🎉
+        </div>
+
+        <button class="home-button" id="homeButton">
+            BACK TO HOME
+        </button>
+
+    </div>
+
+    <audio
+        id="backgroundMusic"
+        src="./binkssake.mp3"
+        preload="auto"
+    ></audio>
+
+    <audio
+        id="voiceAudio"
+        preload="auto"
+    ></audio>
+
+</div>
+
+<script>
+
+const titleScreen = document.getElementById("titleScreen");
+const playButton = document.getElementById("playButton");
+const homeButton = document.getElementById("homeButton");
+const loadingMessage = document.getElementById("loadingMessage");
+
+const dialogueArea = document.getElementById("dialogueArea");
+const dialogueBox = document.getElementById("dialogueBox");
+const dialogueText = document.getElementById("dialogueText");
+const nameBox = document.getElementById("nameBox");
+
+const choiceArea = document.getElementById("choiceArea");
+const specialButton = document.getElementById("specialButton");
+
+const ending = document.getElementById("ending");
+
+const backgroundMusic = document.getElementById("backgroundMusic");
+const voiceAudio = document.getElementById("voiceAudio");
+
+const characters = {
+    sanji: document.getElementById("sanji"),
+    robin: document.getElementById("robin"),
+    luffy: document.getElementById("luffy"),
+    nami: document.getElementById("nami"),
+    zoro: document.getElementById("zoro"),
+    usopp: document.getElementById("usopp"),
+    chopper: document.getElementById("chopper"),
+    franky: document.getElementById("franky"),
+    brook: document.getElementById("brook")
+};
+
+let currentDialogue = 0;
+let typing = false;
+let typingTimer;
+let voicePlaying = false;
+
+const normalBgmVolume = 0.50;
+const voiceBgmVolume = 0.15;
+
+backgroundMusic.volume = normalBgmVolume;
+voiceAudio.volume = 1.0;
+
+const audioFiles = [
+    "mayfairlady.mp3",
+    "luffyoi.mp3",
+    "robinhahaha.mp3",
+    "robingreet.mp3",
+    "sanjinanibirthday.mp3",
+    "luffycake.mp3",
+    "brookyohoho.mp3",
+    "frankysuper.mp3",
+    "chopperhabbybirthday.mp3",
+    "namialrighteveryone.mp3"
+];
+
+const audioCache = {};
+
+audioFiles.forEach(file => {
+
+    const audio = new Audio();
+
+    audio.preload = "auto";
+    audio.src = "./" + file;
+
+    audioCache[file] = audio;
+
+    audio.load();
+
+});
+
+const story = [
+
+    {
+        character: "Sanji",
+        sprite: "sanji_flirty.png",
+        characterId: "sanji",
+        text: "My fairrr ladyyyy! How are you today? Did you miss me?",
+        audio: "mayfairlady.mp3"
+    },
+
+    {
+        character: "Robin",
+        sprite: "robin_neutral.png",
+        characterId: "robin",
+        text: "Sanji, please. Give her some space."
+    },
+
+    {
+        character: "Sanji",
+        sprite: "sanji_flirty.png",
+        characterId: "sanji",
+        text: "Robin-chwaaaan, I was simply greeting our lovely guest!"
+    },
+
+    {
+        character: "Robin",
+        sprite: "robin_amused.png",
+        characterId: "robin",
+        text: "Of course you were."
+    },
+
+    {
+        character: "Sanji",
+        sprite: "sanji_neutral.png",
+        characterId: "sanji",
+        text: "Anyway… you seem to be enjoying yourself. The crew has been quite lively today."
+    },
+
+    {
+        character: "Robin",
+        sprite: "robin_smiling.png",
+        characterId: "robin",
+        text: "That's true. Luffy has already eaten half the food Sanji prepared."
+    },
+
+    {
+        character: "Luffy",
+        sprite: "luffy_shocked.png",
+        characterId: "luffy",
+        text: "HEY! I heard that!",
+        audio: "luffyoi.mp3"
+    },
+
+    {
+        character: "Sanji",
+        sprite: "sanji_angry.png",
+        characterId: "sanji",
+        text: "YOU ATE HALF THE FRIDGE, YOU IDIOT!"
+    },
+
+    {
+        character: "Robin",
+        sprite: "robin_laughing.png",
+        characterId: "robin",
+        text: "*chuckles* It seems nothing ever changes around here.",
+        audio: "robinhahaha.mp3"
+    },
+
+    {
+        character: "Robin",
+        sprite: "robin_amused.png",
+        characterId: "robin",
+        text: "By the way, today is a special day, isn't it?",
+        choice: true
+    },
+
+    {
+        character: "Rose",
+        text: "Special?"
+    },
+
+    {
+        character: "Robin",
+        sprite: "robin_smiling.png",
+        characterId: "robin",
+        text: "Happy Birthday Rose. I hope you have a wonderful day, and that you'll have many more happy memories with the people you care about.",
+        audio: "robingreet.mp3",
+        muteBgm: true
+    },
+
+    {
+        character: "Robin",
+        sprite: "robin_smiling.png",
+        characterId: "robin",
+        text: "Mil Fleur."
+    },
+
+    {
+        character: "Sanji",
+        sprite: "sanji_flirty.png",
+        characterId: "sanji",
+        text: "WHAT?! A BIRTHDAY?! Then allow me to prepare the greatest feast the Thousand Sunny has ever seen!",
+        audio: "sanjinanibirthday.mp3"
+    },
+
+    {
+        character: "Sanji",
+        sprite: "sanji_flirty.png",
+        characterId: "sanji",
+        text: "And don't worry, my fair lady! I'll make sure the cake is magnificent!"
+    },
+
+    {
+        character: "Luffy",
+        sprite: "luffy_shocked.png",
+        characterId: "luffy",
+        text: "CAKE?!",
+        audio: "luffycake.mp3"
+    },
+
+    {
+        character: "Sanji",
+        sprite: "sanji_angry.png",
+        characterId: "sanji",
+        text: "DON'T YOU DARE TOUCH IT!"
+    },
+
+    {
+        character: "Nami",
+        sprite: "nami_smiling.png",
+        characterId: "nami",
+        text: "Alright everyone, let's get the celebration started!",
+        audio: "namialrighteveryone.mp3"
+    },
+
+    {
+        character: "Zoro",
+        sprite: "zoro_neutral.png",
+        characterId: "zoro",
+        text: "Hmph. Sounds like a lot of noise."
+    },
+
+    {
+        character: "Usopp",
+        sprite: "usopp_talking.png",
+        characterId: "usopp",
+        text: "Noise? This is a legendary birthday celebration! I'll make sure everyone remembers it!"
+    },
+
+    {
+        character: "Chopper",
+        sprite: "chopper_happy.png",
+        characterId: "chopper",
+        text: "Happy Birthday! This is going to be so much fun!",
+        audio: "chopperhabbybirthday.mp3"
+    },
+
+    {
+        character: "Franky",
+        sprite: "franky_excited.png",
+        characterId: "franky",
+        text: "SUPER! Let's make this birthday absolutely unforgettable!",
+        audio: "frankysuper.mp3"
+    },
+
+    {
+        character: "Brook",
+        sprite: "brook_celebrating.png",
+        characterId: "brook",
+        text: "Yohohoho! Allow me to provide the music for the celebration!",
+        audio: "brookyohoho.mp3"
+    },
+
+    {
+        character: "Everyone",
+        text: "HAPPY BIRTHDAY!!"
+    }
+
+];
+
+function hideAllCharacters() {
+
+    Object.values(characters).forEach(character => {
+
+        character.classList.remove("show");
+        character.classList.remove("active");
+
+    });
+
+}
+
+function showCharacter(characterId, sprite) {
+
+    hideAllCharacters();
+
+    if (!characterId || !characters[characterId]) {
+        return;
+    }
+
+    const character = characters[characterId];
+
+    if (sprite) {
+        character.src = "./images/" + sprite;
+    }
+
+    character.classList.add("show");
+    character.classList.add("active");
+
+}
+
+function typeText(text) {
+
+    clearInterval(typingTimer);
+
+    dialogueText.textContent = "";
+
+    let index = 0;
+
+    typing = true;
+
+    typingTimer = setInterval(() => {
+
+        dialogueText.textContent += text.charAt(index);
+
+        index++;
+
+        if (index >= text.length) {
+
+            clearInterval(typingTimer);
+
+            typing = false;
+
+        }
+
+    }, 25);
+
+}
+
+function playVoice(scene) {
+
+    if (!scene.audio) {
+        return;
+    }
+
+    const cachedAudio = audioCache[scene.audio];
+
+    if (!cachedAudio) {
+        return;
+    }
+
+    voicePlaying = true;
+
+    voiceAudio.pause();
+
+    voiceAudio.src = cachedAudio.src;
+
+    voiceAudio.currentTime = 0;
+
+    if (scene.muteBgm) {
+
+        backgroundMusic.volume = 0;
+
+    } else {
+
+        backgroundMusic.volume = voiceBgmVolume;
+
+    }
+
+    voiceAudio.play().catch(() => {
+
+        voicePlaying = false;
+
+        backgroundMusic.volume = normalBgmVolume;
+
+    });
+
+}
+
+voiceAudio.addEventListener("ended", () => {
+
+    voicePlaying = false;
+
+    backgroundMusic.volume = normalBgmVolume;
+
+    backgroundMusic.play().catch(() => {});
+
+});
+
+function showDialogue() {
+
+    const scene = story[currentDialogue];
+
+    nameBox.textContent = scene.character;
+
+    if (scene.characterId) {
+
+        showCharacter(
+            scene.characterId,
+            scene.sprite
+        );
+
+    } else {
+
+        hideAllCharacters();
+
+    }
+
+    if (scene.choice) {
+
+        dialogueArea.style.display = "block";
+
+        typeText(scene.text);
+
+        setTimeout(() => {
+
+            choiceArea.classList.add("show");
+
+        }, 900);
+
+    } else {
+
+        choiceArea.classList.remove("show");
+
+        typeText(scene.text);
+
+        if (scene.audio) {
+
+            playVoice(scene);
+
+        }
+
+    }
+
+}
+
+function nextDialogue() {
+
+    if (voicePlaying) {
+        return;
+    }
+
+    if (typing) {
+
+        clearInterval(typingTimer);
+
+        dialogueText.textContent =
+            story[currentDialogue].text;
+
+        typing = false;
+
+        return;
+
+    }
+
+    const currentScene = story[currentDialogue];
+
+    if (currentScene.choice) {
+        return;
+    }
+
+    currentDialogue++;
+
+    if (currentDialogue >= story.length) {
+
+        showEnding();
+
+        return;
+
+    }
+
+    showDialogue();
+
+}
+
+function showEnding() {
+
+    dialogueArea.style.display = "none";
+
+    choiceArea.classList.remove("show");
+
+    hideAllCharacters();
+
+    ending.classList.add("show");
+
+}
+
+function startMusic() {
+
+    backgroundMusic.currentTime = 0;
+
+    backgroundMusic.volume = normalBgmVolume;
+
+    backgroundMusic.play().catch(() => {});
+
+}
+
+function returnHome() {
+
+    backgroundMusic.pause();
+
+    backgroundMusic.currentTime = 0;
+
+    voiceAudio.pause();
+
+    voiceAudio.currentTime = 0;
+
+    voicePlaying = false;
+
+    backgroundMusic.volume = normalBgmVolume;
+
+    ending.classList.remove("show");
+
+    dialogueArea.style.display = "none";
+
+    choiceArea.classList.remove("show");
+
+    hideAllCharacters();
+
+    currentDialogue = 0;
+
+    titleScreen.classList.remove("hidden");
+
+}
+
+playButton.addEventListener("click", () => {
+
+    playButton.disabled = true;
+
+    loadingMessage.classList.add("show");
+
+    startMusic();
+
+    setTimeout(() => {
+
+        titleScreen.classList.add("hidden");
+
+        dialogueArea.style.display = "block";
+
+        currentDialogue = 0;
+
+        showDialogue();
+
+        playButton.disabled = false;
+
+        loadingMessage.classList.remove("show");
+
+    }, 1500);
+
+});
+
+dialogueBox.addEventListener("click", nextDialogue);
+
+specialButton.addEventListener("click", () => {
+
+    if (voicePlaying) {
+        return;
+    }
+
+    choiceArea.classList.remove("show");
+
+    currentDialogue++;
+
+    showDialogue();
+
+});
+
+homeButton.addEventListener("click", returnHome);
+
+</script>
+
+</body>
+</html>
