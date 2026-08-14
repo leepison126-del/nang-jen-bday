@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Nang Jensss</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>A Birthday Adventure</title>
 
 <style>
 * {
@@ -17,8 +17,8 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: Georgia, "Times New Roman", serif;
     background: #000;
+    font-family: Georgia, "Times New Roman", serif;
 }
 
 body {
@@ -27,10 +27,15 @@ body {
     align-items: center;
 }
 
+button {
+    font-family: inherit;
+}
+
 .game {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
     overflow: hidden;
     background: #000;
 }
@@ -38,32 +43,36 @@ body {
 .background {
     position: absolute;
     inset: 0;
+    z-index: 0;
     background-image: url("./images/thousand_sunny.png");
     background-size: cover;
-    background-position: center;
+    background-position: center center;
     background-repeat: no-repeat;
+    transform: scale(1.01);
 }
 
 .background::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.05),
-        rgba(0, 0, 0, 0.25)
-    );
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.03),
+            rgba(0, 0, 0, 0.22)
+        );
 }
 
 .title-screen {
     position: absolute;
     inset: 0;
-    z-index: 20;
+    z-index: 30;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    padding: 25px;
     background:
         linear-gradient(
             rgba(0, 0, 0, 0.35),
@@ -71,51 +80,79 @@ body {
         ),
         url("./images/thousand_sunny.png");
     background-size: cover;
-    background-position: center;
-    transition: opacity 1s ease;
+    background-position: center center;
+    transition:
+        opacity 0.8s ease,
+        visibility 0.8s ease;
 }
 
 .title-screen.hidden {
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
 }
 
 .title {
-    color: white;
+    color: #fff;
     font-size: clamp(42px, 7vw, 90px);
     font-weight: bold;
     letter-spacing: 3px;
     text-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.8),
+        0 4px 15px rgba(0, 0, 0, 0.85),
         0 0 30px rgba(255, 255, 255, 0.15);
 }
 
 .subtitle {
+    margin-top: 12px;
     color: #f4e7c5;
     font-size: clamp(16px, 2vw, 25px);
-    margin-top: 12px;
     font-style: italic;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
 }
 
 .play-button,
 .home-button {
     margin-top: 45px;
     padding: 15px 55px;
-    border: 2px solid white;
+    border: 2px solid #fff;
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.35);
-    color: white;
+    color: #fff;
     font-size: 20px;
     letter-spacing: 3px;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        opacity 0.25s ease;
 }
 
 .play-button:hover,
 .home-button:hover {
-    background: white;
-    color: black;
+    background: #fff;
+    color: #000;
     transform: scale(1.05);
+}
+
+.play-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+}
+
+.loading-message {
+    position: absolute;
+    bottom: 10%;
+    color: #fff;
+    font-size: 15px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-shadow: 0 2px 8px #000;
+}
+
+.loading-message.show {
+    opacity: 0.85;
 }
 
 .characters {
@@ -127,22 +164,27 @@ body {
 
 .character {
     position: absolute;
-    bottom: 17%;
+    bottom: 18%;
+    max-width: min(42vw, 520px);
     max-height: 72%;
-    max-width: 42%;
+    width: auto;
+    height: auto;
     object-fit: contain;
     object-position: bottom center;
     opacity: 0;
-    transform: translateY(40px);
-    transition:
-        opacity 0.45s ease,
-        transform 0.45s ease,
-        filter 0.3s ease;
+    visibility: hidden;
+    transform: translateY(35px);
     filter: brightness(0.65);
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease,
+        filter 0.3s ease,
+        visibility 0.35s ease;
 }
 
 .character.show {
     opacity: 1;
+    visibility: visible;
     transform: translateY(0);
 }
 
@@ -151,12 +193,12 @@ body {
 }
 
 .character.left {
-    left: 7%;
+    left: 6%;
 }
 
 .character.center {
     left: 50%;
-    transform: translate(-50%, 40px);
+    transform: translate(-50%, 35px);
 }
 
 .character.center.show {
@@ -164,24 +206,25 @@ body {
 }
 
 .character.right {
-    right: 7%;
+    right: 6%;
 }
 
 .dialogue-area {
     position: absolute;
     left: 3%;
     right: 3%;
-    bottom: 2%;
-    z-index: 10;
+    bottom: max(2%, env(safe-area-inset-bottom));
+    z-index: 15;
     display: none;
 }
 
 .name-box {
     display: inline-block;
     min-width: 130px;
+    max-width: 80%;
     padding: 8px 22px;
-    background: rgba(15, 15, 15, 0.92);
-    color: white;
+    background: rgba(12, 12, 12, 0.94);
+    color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.6);
     border-bottom: none;
     font-size: 20px;
@@ -189,33 +232,37 @@ body {
 }
 
 .dialogue-box {
+    position: relative;
     min-height: 125px;
-    padding: 25px 30px;
-    background: rgba(8, 8, 8, 0.88);
+    padding: 24px 60px 25px 30px;
+    background: rgba(8, 8, 8, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.45);
-    color: white;
+    color: #fff;
     cursor: pointer;
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    user-select: none;
 }
 
 .dialogue-text {
     font-size: clamp(17px, 2vw, 25px);
     line-height: 1.55;
+    word-wrap: break-word;
 }
 
 .next-indicator {
     position: absolute;
-    right: 25px;
-    bottom: 15px;
+    right: 24px;
+    bottom: 14px;
     font-size: 18px;
-    opacity: 0.7;
+    opacity: 0.65;
     animation: pulse 1.2s infinite;
 }
 
 .choice-area {
     position: absolute;
     inset: 0;
-    z-index: 15;
+    z-index: 20;
     display: none;
     justify-content: center;
     align-items: center;
@@ -227,24 +274,30 @@ body {
 }
 
 .choice-button {
-    pointer-events: auto;
     min-width: 220px;
     padding: 18px 40px;
-    border: 2px solid white;
+    border: 2px solid #fff;
     border-radius: 5px;
-    background: rgba(10, 10, 10, 0.88);
-    color: white;
-    font-family: inherit;
+    background: rgba(10, 10, 10, 0.9);
+    color: #fff;
     font-size: 22px;
     cursor: pointer;
-    transition: all 0.25s ease;
-    animation: choiceAppear 0.7s ease;
+    pointer-events: auto;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+    animation: choiceAppear 0.6s ease;
 }
 
 .choice-button:hover {
-    background: white;
-    color: black;
+    background: #fff;
+    color: #000;
     transform: scale(1.06);
+}
+
+.choice-button:active {
+    transform: scale(0.98);
 }
 
 .ending {
@@ -256,37 +309,40 @@ body {
     align-items: center;
     flex-direction: column;
     text-align: center;
+    padding:
+        0
+        30px
+        max(6%, env(safe-area-inset-bottom));
     background-image:
         linear-gradient(
             to top,
-            rgba(0, 0, 0, 0.82),
-            rgba(0, 0, 0, 0.05) 60%,
-            rgba(0, 0, 0, 0.05)
+            rgba(0, 0, 0, 0.85),
+            rgba(0, 0, 0, 0.08) 65%,
+            rgba(0, 0, 0, 0.08)
         ),
         url("./images/final_feast.png");
     background-size: cover;
-    background-position: center;
+    background-position: center center;
     background-repeat: no-repeat;
-    padding: 0 30px 6%;
 }
 
 .ending.show {
     display: flex;
-    animation: endingAppear 1.5s ease forwards;
+    animation: endingAppear 1s ease forwards;
 }
 
 .ending-title {
-    color: white;
+    color: #fff;
     font-size: clamp(38px, 7vw, 90px);
     font-weight: bold;
-    text-shadow: 0 5px 20px black;
+    text-shadow: 0 5px 20px #000;
 }
 
 .ending-subtitle {
     margin-top: 15px;
-    color: white;
+    color: #fff;
     font-size: clamp(17px, 2.5vw, 28px);
-    text-shadow: 0 3px 10px black;
+    text-shadow: 0 3px 10px #000;
 }
 
 .home-button {
@@ -295,21 +351,9 @@ body {
     font-size: 16px;
 }
 
-.loading-message {
-    position: absolute;
-    bottom: 12%;
-    color: white;
-    font-size: 16px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.loading-message.show {
-    opacity: 0.8;
-}
-
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 0.3;
     }
 
@@ -340,59 +384,141 @@ body {
     }
 }
 
-@media (max-width: 700px) {
+@media (orientation: portrait) {
+
+    .background {
+        background-position: 50% 55%;
+        background-size: cover;
+        transform: scale(1.04);
+    }
+
+    .title-screen {
+        background-position: 50% 55%;
+    }
 
     .character {
-        max-width: 60%;
-        max-height: 60%;
-        bottom: 24%;
+        bottom: 25%;
+        max-width: 65vw;
+        max-height: 58%;
     }
 
     .character.left {
-        left: 2%;
+        left: 1%;
     }
 
     .character.right {
-        right: 2%;
+        right: 1%;
+    }
+
+    .character.center {
+        left: 50%;
     }
 
     .dialogue-area {
         left: 2%;
         right: 2%;
-        bottom: 2%;
+        bottom: max(2%, env(safe-area-inset-bottom));
     }
 
     .dialogue-box {
         min-height: 115px;
-        padding: 20px;
+        padding: 18px 48px 20px 20px;
     }
 
     .name-box {
+        padding: 7px 18px;
         font-size: 17px;
+    }
+
+    .dialogue-text {
+        font-size: clamp(16px, 4.2vw, 20px);
+        line-height: 1.45;
+    }
+
+    .next-indicator {
+        right: 18px;
+        bottom: 12px;
+    }
+
+    .choice-button {
+        min-width: 190px;
+        padding: 16px 32px;
+        font-size: 20px;
+    }
+
+    .ending {
+        padding-left: 15px;
+        padding-right: 15px;
+        background-position: center center;
+    }
+
+    .ending-title {
+        font-size: clamp(36px, 11vw, 55px);
+    }
+
+    .ending-subtitle {
+        font-size: 17px;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .title {
+        font-size: 38px;
+        letter-spacing: 1px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    .play-button {
+        margin-top: 35px;
+        padding: 13px 40px;
+        font-size: 17px;
+    }
+
+    .character {
+        bottom: 27%;
+        max-width: 70vw;
+        max-height: 54%;
+    }
+
+    .dialogue-box {
+        min-height: 105px;
+        padding: 16px 42px 18px 17px;
+    }
+
+    .dialogue-text {
+        font-size: 16px;
+    }
+
+    .name-box {
+        font-size: 16px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+
+    .character {
+        bottom: 20%;
+        max-height: 65%;
+    }
+
+    .dialogue-box {
+        min-height: 100px;
+        padding-top: 17px;
+        padding-bottom: 17px;
     }
 
     .dialogue-text {
         font-size: 17px;
     }
 
-    .ending {
-        padding-bottom: 8%;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-    .ending-title {
-        font-size: 40px;
-    }
-
-    .ending-subtitle {
+    .name-box {
         font-size: 17px;
-    }
-
-    .home-button {
-        margin-top: 20px;
-        padding: 11px 28px;
-        font-size: 14px;
+        padding: 6px 18px;
     }
 }
 </style>
@@ -411,7 +537,7 @@ body {
         </div>
 
         <div class="subtitle">
-            A little journey across the Grand Line of Iloilo
+            A little journey across the Grand Line
         </div>
 
         <button class="play-button" id="playButton">
@@ -537,6 +663,7 @@ body {
         id="backgroundMusic"
         src="./binkssake.mp3"
         preload="auto"
+        loop
     ></audio>
 
     <audio
@@ -547,7 +674,6 @@ body {
 </div>
 
 <script>
-
 const titleScreen = document.getElementById("titleScreen");
 const playButton = document.getElementById("playButton");
 const homeButton = document.getElementById("homeButton");
@@ -578,19 +704,22 @@ const characters = {
     brook: document.getElementById("brook")
 };
 
+const NORMAL_BGM_VOLUME = 0.35;
+const CHARACTER_VOICE_VOLUME = 0.60;
+const START_DELAY = 1500;
+const TEXT_SPEED = 25;
+
 let currentDialogue = 0;
 let typing = false;
-let typingTimer;
+let typingTimer = null;
 let voicePlaying = false;
+let gameStarted = false;
 
-const normalBgmVolume = 0.50;
-const voiceBgmVolume = 0.15;
-
-backgroundMusic.volume = normalBgmVolume;
-voiceAudio.volume = 1.0;
+backgroundMusic.volume = NORMAL_BGM_VOLUME;
+voiceAudio.volume = CHARACTER_VOICE_VOLUME;
 
 const audioFiles = [
-    "mayfairlady.mp3",
+    "myfairlady.mp3",
     "luffyoi.mp3",
     "robinhahaha.mp3",
     "robingreet.mp3",
@@ -598,23 +727,18 @@ const audioFiles = [
     "luffycake.mp3",
     "brookyohoho.mp3",
     "frankysuper.mp3",
-    "chopperhabbybirthday.mp3",
+    "chopperhappybirthday.mp3",
     "namialrighteveryone.mp3"
 ];
 
 const audioCache = {};
 
 audioFiles.forEach(file => {
-
     const audio = new Audio();
-
     audio.preload = "auto";
     audio.src = "./" + file;
-
     audioCache[file] = audio;
-
     audio.load();
-
 });
 
 const story = [
@@ -624,7 +748,7 @@ const story = [
         sprite: "sanji_flirty.png",
         characterId: "sanji",
         text: "My fairrr ladyyyy! How are you today? Did you miss me?",
-        audio: "mayfairlady.mp3"
+        audio: "myfairlady.mp3"
     },
 
     {
@@ -703,8 +827,7 @@ const story = [
         sprite: "robin_smiling.png",
         characterId: "robin",
         text: "Happy Birthday Rose. I hope you have a wonderful day, and that you'll have many more happy memories with the people you care about.",
-        audio: "robingreet.mp3",
-        muteBgm: true
+        audio: "robingreet.mp3"
     },
 
     {
@@ -771,7 +894,7 @@ const story = [
         sprite: "chopper_happy.png",
         characterId: "chopper",
         text: "Happy Birthday! This is going to be so much fun!",
-        audio: "chopperhabbybirthday.mp3"
+        audio: "chopperhappybirthday.mp3"
     },
 
     {
@@ -794,22 +917,16 @@ const story = [
         character: "Everyone",
         text: "HAPPY BIRTHDAY!!"
     }
-
 ];
 
 function hideAllCharacters() {
-
     Object.values(characters).forEach(character => {
-
         character.classList.remove("show");
         character.classList.remove("active");
-
     });
-
 }
 
 function showCharacter(characterId, sprite) {
-
     hideAllCharacters();
 
     if (!characterId || !characters[characterId]) {
@@ -824,39 +941,47 @@ function showCharacter(characterId, sprite) {
 
     character.classList.add("show");
     character.classList.add("active");
-
 }
 
 function typeText(text) {
-
     clearInterval(typingTimer);
 
     dialogueText.textContent = "";
 
     let index = 0;
-
     typing = true;
 
     typingTimer = setInterval(() => {
-
         dialogueText.textContent += text.charAt(index);
-
         index++;
 
         if (index >= text.length) {
-
             clearInterval(typingTimer);
-
             typing = false;
-
         }
+    }, TEXT_SPEED);
+}
 
-    }, 25);
+function finishTyping() {
+    clearInterval(typingTimer);
 
+    if (typing) {
+        dialogueText.textContent = story[currentDialogue].text;
+        typing = false;
+        return true;
+    }
+
+    return false;
+}
+
+function stopVoice() {
+    voiceAudio.pause();
+    voiceAudio.currentTime = 0;
+    voicePlaying = false;
+    voiceAudio.onended = null;
 }
 
 function playVoice(scene) {
-
     if (!scene.audio) {
         return;
     }
@@ -867,108 +992,63 @@ function playVoice(scene) {
         return;
     }
 
-    voicePlaying = true;
-
-    voiceAudio.pause();
+    stopVoice();
 
     voiceAudio.src = cachedAudio.src;
-
     voiceAudio.currentTime = 0;
+    voiceAudio.volume = CHARACTER_VOICE_VOLUME;
 
-    if (scene.muteBgm) {
+    voicePlaying = true;
 
-        backgroundMusic.volume = 0;
+    const handleVoiceEnd = () => {
+        voicePlaying = false;
+        voiceAudio.onended = null;
+        backgroundMusic.volume = NORMAL_BGM_VOLUME;
+    };
 
-    } else {
-
-        backgroundMusic.volume = voiceBgmVolume;
-
-    }
+    voiceAudio.onended = handleVoiceEnd;
 
     voiceAudio.play().catch(() => {
-
         voicePlaying = false;
-
-        backgroundMusic.volume = normalBgmVolume;
-
+        voiceAudio.onended = null;
+        backgroundMusic.volume = NORMAL_BGM_VOLUME;
     });
-
 }
 
-voiceAudio.addEventListener("ended", () => {
-
-    voicePlaying = false;
-
-    backgroundMusic.volume = normalBgmVolume;
-
-    backgroundMusic.play().catch(() => {});
-
-});
-
 function showDialogue() {
-
     const scene = story[currentDialogue];
 
     nameBox.textContent = scene.character;
 
     if (scene.characterId) {
-
         showCharacter(
             scene.characterId,
             scene.sprite
         );
-
     } else {
-
         hideAllCharacters();
-
     }
 
-    if (scene.choice) {
+    choiceArea.classList.remove("show");
 
-        dialogueArea.style.display = "block";
+    typeText(scene.text);
 
-        typeText(scene.text);
-
-        setTimeout(() => {
-
-            choiceArea.classList.add("show");
-
-        }, 900);
-
-    } else {
-
-        choiceArea.classList.remove("show");
-
-        typeText(scene.text);
-
-        if (scene.audio) {
-
-            playVoice(scene);
-
-        }
-
+    if (scene.audio) {
+        playVoice(scene);
     }
-
 }
 
 function nextDialogue() {
+    if (!gameStarted) {
+        return;
+    }
 
     if (voicePlaying) {
         return;
     }
 
-    if (typing) {
-
-        clearInterval(typingTimer);
-
-        dialogueText.textContent =
-            story[currentDialogue].text;
-
-        typing = false;
-
+    if (finishTyping()) {
         return;
-
     }
 
     const currentScene = story[currentDialogue];
@@ -980,78 +1060,76 @@ function nextDialogue() {
     currentDialogue++;
 
     if (currentDialogue >= story.length) {
-
         showEnding();
-
         return;
-
     }
 
     showDialogue();
-
 }
 
 function showEnding() {
-
     dialogueArea.style.display = "none";
-
     choiceArea.classList.remove("show");
-
     hideAllCharacters();
 
     ending.classList.add("show");
-
 }
 
 function startMusic() {
-
     backgroundMusic.currentTime = 0;
+    backgroundMusic.volume = NORMAL_BGM_VOLUME;
 
-    backgroundMusic.volume = normalBgmVolume;
+    const musicPromise = backgroundMusic.play();
 
-    backgroundMusic.play().catch(() => {});
+    if (musicPromise) {
+        musicPromise.catch(() => {});
+    }
+}
 
+function resetGame() {
+    clearInterval(typingTimer);
+
+    stopVoice();
+
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+    backgroundMusic.volume = NORMAL_BGM_VOLUME;
+
+    currentDialogue = 0;
+    typing = false;
+    gameStarted = false;
+
+    dialogueText.textContent = "";
+    dialogueArea.style.display = "none";
+    choiceArea.classList.remove("show");
+    ending.classList.remove("show");
+
+    hideAllCharacters();
 }
 
 function returnHome() {
-
-    backgroundMusic.pause();
-
-    backgroundMusic.currentTime = 0;
-
-    voiceAudio.pause();
-
-    voiceAudio.currentTime = 0;
-
-    voicePlaying = false;
-
-    backgroundMusic.volume = normalBgmVolume;
-
-    ending.classList.remove("show");
-
-    dialogueArea.style.display = "none";
-
-    choiceArea.classList.remove("show");
-
-    hideAllCharacters();
-
-    currentDialogue = 0;
+    resetGame();
 
     titleScreen.classList.remove("hidden");
-
+    loadingMessage.classList.remove("show");
+    playButton.disabled = false;
 }
 
 playButton.addEventListener("click", () => {
+    if (gameStarted) {
+        return;
+    }
 
     playButton.disabled = true;
-
     loadingMessage.classList.add("show");
 
     startMusic();
 
     setTimeout(() => {
+        gameStarted = true;
 
         titleScreen.classList.add("hidden");
+        loadingMessage.classList.remove("show");
 
         dialogueArea.style.display = "block";
 
@@ -1059,19 +1137,13 @@ playButton.addEventListener("click", () => {
 
         showDialogue();
 
-        playButton.disabled = false;
-
-        loadingMessage.classList.remove("show");
-
-    }, 1500);
-
+    }, START_DELAY);
 });
 
 dialogueBox.addEventListener("click", nextDialogue);
 
 specialButton.addEventListener("click", () => {
-
-    if (voicePlaying) {
+    if (!gameStarted || voicePlaying) {
         return;
     }
 
@@ -1080,7 +1152,6 @@ specialButton.addEventListener("click", () => {
     currentDialogue++;
 
     showDialogue();
-
 });
 
 homeButton.addEventListener("click", returnHome);
