@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>A Birthday Adventure</title>
+
+<title>For Rose</title>
 
 <style>
 * {
@@ -27,10 +28,6 @@ body {
     align-items: center;
 }
 
-button {
-    font-family: inherit;
-}
-
 .game {
     position: relative;
     width: 100vw;
@@ -40,50 +37,55 @@ button {
     background: #000;
 }
 
+
+
 .background {
     position: absolute;
     inset: 0;
     z-index: 0;
+
     background-image: url("./images/thousand_sunny.png");
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    transform: scale(1.01);
 }
 
 .background::after {
     content: "";
     position: absolute;
     inset: 0;
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.03),
-            rgba(0, 0, 0, 0.22)
-        );
+    background: rgba(0, 0, 0, 0.12);
 }
+
+
 
 .title-screen {
     position: absolute;
     inset: 0;
-    z-index: 30;
+    z-index: 100;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     text-align: center;
     padding: 25px;
+
     background:
         linear-gradient(
             rgba(0, 0, 0, 0.35),
-            rgba(0, 0, 0, 0.65)
+            rgba(0, 0, 0, 0.7)
         ),
         url("./images/thousand_sunny.png");
+
     background-size: cover;
     background-position: center center;
+    background-repeat: no-repeat;
+
     transition:
-        opacity 0.8s ease,
-        visibility 0.8s ease;
+        opacity 0.7s ease,
+        visibility 0.7s ease;
 }
 
 .title-screen.hidden {
@@ -94,44 +96,51 @@ button {
 
 .title {
     color: #fff;
-    font-size: clamp(42px, 7vw, 90px);
+    font-size: clamp(40px, 7vw, 85px);
     font-weight: bold;
     letter-spacing: 3px;
-    text-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.85),
-        0 0 30px rgba(255, 255, 255, 0.15);
+
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
 }
 
 .subtitle {
     margin-top: 12px;
+
     color: #f4e7c5;
-    font-size: clamp(16px, 2vw, 25px);
+    font-size: clamp(15px, 2vw, 24px);
     font-style: italic;
-    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+
+    text-shadow: 0 3px 10px #000;
 }
 
 .play-button,
 .home-button {
-    margin-top: 45px;
-    padding: 15px 55px;
+    position: relative;
+    z-index: 101;
+
+    margin-top: 40px;
+    padding: 15px 50px;
+
     border: 2px solid #fff;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
+
+    background: rgba(0, 0, 0, 0.55);
+
     color: #fff;
     font-size: 20px;
     letter-spacing: 3px;
+
     cursor: pointer;
-    transition:
-        background 0.25s ease,
-        color 0.25s ease,
-        transform 0.25s ease,
-        opacity 0.25s ease;
+    pointer-events: auto;
+
+    transition: 0.25s ease;
 }
 
 .play-button:hover,
 .home-button:hover {
     background: #fff;
     color: #000;
+
     transform: scale(1.05);
 }
 
@@ -142,130 +151,178 @@ button {
 }
 
 .loading-message {
-    position: absolute;
-    bottom: 10%;
+    margin-top: 20px;
+
     color: #fff;
     font-size: 15px;
+
     opacity: 0;
-    transition: opacity 0.3s ease;
+
     text-shadow: 0 2px 8px #000;
+
+    transition: opacity 0.3s ease;
 }
 
 .loading-message.show {
-    opacity: 0.85;
+    opacity: 0.9;
 }
+
+
 
 .characters {
     position: absolute;
     inset: 0;
+
     z-index: 5;
+
     pointer-events: none;
 }
 
 .character {
     position: absolute;
+
     bottom: 18%;
+
     max-width: min(42vw, 520px);
     max-height: 72%;
+
     width: auto;
     height: auto;
+
     object-fit: contain;
     object-position: bottom center;
+
     opacity: 0;
     visibility: hidden;
-    transform: translateY(35px);
-    filter: brightness(0.65);
+
+    transform: translateY(25px);
+
     transition:
-        opacity 0.35s ease,
-        transform 0.35s ease,
-        filter 0.3s ease,
-        visibility 0.35s ease;
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        visibility 0.3s ease;
 }
 
 .character.show {
     opacity: 1;
     visibility: visible;
+
     transform: translateY(0);
 }
 
-.character.active {
-    filter: brightness(1);
-}
-
 .character.left {
-    left: 6%;
+    left: 5%;
 }
 
 .character.center {
     left: 50%;
-    transform: translate(-50%, 35px);
+
+    transform:
+        translate(-50%, 25px);
 }
 
 .character.center.show {
-    transform: translate(-50%, 0);
+    transform:
+        translate(-50%, 0);
 }
 
 .character.right {
-    right: 6%;
+    right: 5%;
 }
+
+
 
 .dialogue-area {
     position: absolute;
+
     left: 3%;
     right: 3%;
+
     bottom: max(2%, env(safe-area-inset-bottom));
-    z-index: 15;
+
+    z-index: 30;
+
     display: none;
 }
 
 .name-box {
     display: inline-block;
-    min-width: 130px;
-    max-width: 80%;
-    padding: 8px 22px;
-    background: rgba(12, 12, 12, 0.94);
+
+    min-width: 120px;
+
+    padding: 8px 20px;
+
+    background: rgba(10, 10, 10, 0.95);
+
     color: #fff;
+
     border: 1px solid rgba(255, 255, 255, 0.6);
     border-bottom: none;
+
     font-size: 20px;
     font-weight: bold;
 }
 
 .dialogue-box {
     position: relative;
-    min-height: 125px;
-    padding: 24px 60px 25px 30px;
-    background: rgba(8, 8, 8, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.45);
+
+    min-height: 120px;
+
+    padding:
+        22px
+        60px
+        25px
+        28px;
+
+    background: rgba(5, 5, 5, 0.92);
+
+    border: 1px solid rgba(255, 255, 255, 0.5);
+
     color: #fff;
+
     cursor: pointer;
+    pointer-events: auto;
+
+    user-select: none;
+
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    user-select: none;
 }
 
 .dialogue-text {
     font-size: clamp(17px, 2vw, 25px);
-    line-height: 1.55;
+
+    line-height: 1.5;
+
     word-wrap: break-word;
 }
 
 .next-indicator {
     position: absolute;
-    right: 24px;
-    bottom: 14px;
+
+    right: 22px;
+    bottom: 12px;
+
     font-size: 18px;
-    opacity: 0.65;
+
+    opacity: 0.7;
+
     animation: pulse 1.2s infinite;
 }
+
+
 
 .choice-area {
     position: absolute;
     inset: 0;
-    z-index: 20;
+
+    z-index: 80;
+
     display: none;
+
     justify-content: center;
     align-items: center;
+
     pointer-events: none;
 }
 
@@ -274,53 +331,66 @@ button {
 }
 
 .choice-button {
-    min-width: 220px;
-    padding: 18px 40px;
+    position: relative;
+
+    z-index: 81;
+
+    min-width: 210px;
+
+    padding: 17px 40px;
+
     border: 2px solid #fff;
     border-radius: 5px;
-    background: rgba(10, 10, 10, 0.9);
+
+    background: rgba(10, 10, 10, 0.95);
+
     color: #fff;
+
     font-size: 22px;
+
     cursor: pointer;
     pointer-events: auto;
-    transition:
-        background 0.25s ease,
-        color 0.25s ease,
-        transform 0.25s ease;
-    animation: choiceAppear 0.6s ease;
+
+    transition: 0.25s ease;
 }
 
 .choice-button:hover {
     background: #fff;
     color: #000;
+
     transform: scale(1.06);
 }
 
-.choice-button:active {
-    transform: scale(0.98);
-}
+
 
 .ending {
     position: absolute;
     inset: 0;
-    z-index: 25;
+
+    z-index: 90;
+
     display: none;
+
     justify-content: flex-end;
     align-items: center;
+
     flex-direction: column;
+
     text-align: center;
+
     padding:
         0
-        30px
+        25px
         max(6%, env(safe-area-inset-bottom));
-    background-image:
+
+    background:
         linear-gradient(
             to top,
             rgba(0, 0, 0, 0.85),
-            rgba(0, 0, 0, 0.08) 65%,
-            rgba(0, 0, 0, 0.08)
+            rgba(0, 0, 0, 0.1) 70%
         ),
         url("./images/final_feast.png");
+
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -328,30 +398,43 @@ button {
 
 .ending.show {
     display: flex;
-    animation: endingAppear 1s ease forwards;
+
+    animation:
+        endingAppear 0.8s ease forwards;
 }
 
 .ending-title {
     color: #fff;
-    font-size: clamp(38px, 7vw, 90px);
+
+    font-size: clamp(38px, 7vw, 85px);
+
     font-weight: bold;
+
     text-shadow: 0 5px 20px #000;
 }
 
 .ending-subtitle {
-    margin-top: 15px;
+    margin-top: 12px;
+
     color: #fff;
-    font-size: clamp(17px, 2.5vw, 28px);
+
+    font-size: clamp(16px, 2.5vw, 27px);
+
     text-shadow: 0 3px 10px #000;
 }
 
 .home-button {
-    margin-top: 30px;
+    margin-top: 28px;
+
     padding: 12px 35px;
+
     font-size: 16px;
 }
 
+
+
 @keyframes pulse {
+
     0%,
     100% {
         opacity: 0.3;
@@ -362,19 +445,8 @@ button {
     }
 }
 
-@keyframes choiceAppear {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
 @keyframes endingAppear {
+
     from {
         opacity: 0;
     }
@@ -383,21 +455,22 @@ button {
         opacity: 1;
     }
 }
+
+
 
 @media (orientation: portrait) {
 
     .background {
-        background-position: 50% 55%;
-        background-size: cover;
-        transform: scale(1.04);
+        background-position: center 55%;
     }
 
     .title-screen {
-        background-position: 50% 55%;
+        background-position: center 55%;
     }
 
     .character {
         bottom: 25%;
+
         max-width: 65vw;
         max-height: 58%;
     }
@@ -410,62 +483,53 @@ button {
         right: 1%;
     }
 
-    .character.center {
-        left: 50%;
-    }
-
     .dialogue-area {
         left: 2%;
         right: 2%;
-        bottom: max(2%, env(safe-area-inset-bottom));
     }
 
     .dialogue-box {
-        min-height: 115px;
-        padding: 18px 48px 20px 20px;
+        min-height: 110px;
+
+        padding:
+            18px
+            48px
+            20px
+            20px;
     }
 
     .name-box {
         padding: 7px 18px;
+
         font-size: 17px;
     }
 
     .dialogue-text {
         font-size: clamp(16px, 4.2vw, 20px);
-        line-height: 1.45;
-    }
 
-    .next-indicator {
-        right: 18px;
-        bottom: 12px;
+        line-height: 1.45;
     }
 
     .choice-button {
         min-width: 190px;
-        padding: 16px 32px;
+
+        padding: 16px 30px;
+
         font-size: 20px;
     }
 
     .ending {
-        padding-left: 15px;
-        padding-right: 15px;
         background-position: center center;
     }
-
-    .ending-title {
-        font-size: clamp(36px, 11vw, 55px);
-    }
-
-    .ending-subtitle {
-        font-size: 17px;
-        line-height: 1.4;
-    }
 }
+
+
 
 @media (max-width: 420px) {
 
     .title {
-        font-size: 38px;
+        font-size: 37px;
+
         letter-spacing: 1px;
     }
 
@@ -474,51 +538,30 @@ button {
     }
 
     .play-button {
-        margin-top: 35px;
         padding: 13px 40px;
+
         font-size: 17px;
     }
 
     .character {
         bottom: 27%;
+
         max-width: 70vw;
         max-height: 54%;
     }
 
     .dialogue-box {
         min-height: 105px;
-        padding: 16px 42px 18px 17px;
+
+        padding:
+            16px
+            42px
+            18px
+            17px;
     }
 
     .dialogue-text {
         font-size: 16px;
-    }
-
-    .name-box {
-        font-size: 16px;
-    }
-}
-
-@media (orientation: landscape) and (max-height: 600px) {
-
-    .character {
-        bottom: 20%;
-        max-height: 65%;
-    }
-
-    .dialogue-box {
-        min-height: 100px;
-        padding-top: 17px;
-        padding-bottom: 17px;
-    }
-
-    .dialogue-text {
-        font-size: 17px;
-    }
-
-    .name-box {
-        font-size: 17px;
-        padding: 6px 18px;
     }
 }
 </style>
@@ -528,7 +571,9 @@ button {
 
 <div class="game">
 
+
     <div class="background"></div>
+
 
     <div class="title-screen" id="titleScreen">
 
@@ -540,15 +585,23 @@ button {
             A little journey across the Grand Line
         </div>
 
-        <button class="play-button" id="playButton">
+        <button
+            class="play-button"
+            id="playButton"
+        >
             PLAY GAME
         </button>
 
-        <div class="loading-message" id="loadingMessage">
+        <div
+            class="loading-message"
+            id="loadingMessage"
+        >
             Preparing the adventure...
         </div>
 
     </div>
+
+
 
     <div class="characters">
 
@@ -617,15 +670,29 @@ button {
 
     </div>
 
-    <div class="dialogue-area" id="dialogueArea">
+   
 
-        <div class="name-box" id="nameBox">
+    <div
+        class="dialogue-area"
+        id="dialogueArea"
+    >
+
+        <div
+            class="name-box"
+            id="nameBox"
+        >
             Sanji
         </div>
 
-        <div class="dialogue-box" id="dialogueBox">
+        <div
+            class="dialogue-box"
+            id="dialogueBox"
+        >
 
-            <div class="dialogue-text" id="dialogueText"></div>
+            <div
+                class="dialogue-text"
+                id="dialogueText"
+            ></div>
 
             <div class="next-indicator">
                 ▼
@@ -635,15 +702,28 @@ button {
 
     </div>
 
-    <div class="choice-area" id="choiceArea">
 
-        <button class="choice-button" id="specialButton">
+
+    <div
+        class="choice-area"
+        id="choiceArea"
+    >
+
+        <button
+            class="choice-button"
+            id="specialButton"
+        >
             SPECIAL?
         </button>
 
     </div>
 
-    <div class="ending" id="ending">
+
+
+    <div
+        class="ending"
+        id="ending"
+    >
 
         <div class="ending-title">
             HAPPY BIRTHDAY!
@@ -653,11 +733,16 @@ button {
             From everyone aboard the Thousand Sunny 🎉
         </div>
 
-        <button class="home-button" id="homeButton">
+        <button
+            class="home-button"
+            id="homeButton"
+        >
             BACK TO HOME
         </button>
 
     </div>
+
+   
 
     <audio
         id="backgroundMusic"
@@ -674,487 +759,1166 @@ button {
 </div>
 
 <script>
-const titleScreen = document.getElementById("titleScreen");
-const playButton = document.getElementById("playButton");
-const homeButton = document.getElementById("homeButton");
-const loadingMessage = document.getElementById("loadingMessage");
 
-const dialogueArea = document.getElementById("dialogueArea");
-const dialogueBox = document.getElementById("dialogueBox");
-const dialogueText = document.getElementById("dialogueText");
-const nameBox = document.getElementById("nameBox");
 
-const choiceArea = document.getElementById("choiceArea");
-const specialButton = document.getElementById("specialButton");
+const titleScreen =
+    document.getElementById("titleScreen");
 
-const ending = document.getElementById("ending");
+const playButton =
+    document.getElementById("playButton");
 
-const backgroundMusic = document.getElementById("backgroundMusic");
-const voiceAudio = document.getElementById("voiceAudio");
+const homeButton =
+    document.getElementById("homeButton");
+
+const loadingMessage =
+    document.getElementById("loadingMessage");
+
+const dialogueArea =
+    document.getElementById("dialogueArea");
+
+const dialogueBox =
+    document.getElementById("dialogueBox");
+
+const dialogueText =
+    document.getElementById("dialogueText");
+
+const nameBox =
+    document.getElementById("nameBox");
+
+const choiceArea =
+    document.getElementById("choiceArea");
+
+const specialButton =
+    document.getElementById("specialButton");
+
+const ending =
+    document.getElementById("ending");
+
+const backgroundMusic =
+    document.getElementById("backgroundMusic");
+
+const voiceAudio =
+    document.getElementById("voiceAudio");
+
+
 
 const characters = {
-    sanji: document.getElementById("sanji"),
-    robin: document.getElementById("robin"),
-    luffy: document.getElementById("luffy"),
-    nami: document.getElementById("nami"),
-    zoro: document.getElementById("zoro"),
-    usopp: document.getElementById("usopp"),
-    chopper: document.getElementById("chopper"),
-    franky: document.getElementById("franky"),
-    brook: document.getElementById("brook")
+
+    sanji:
+        document.getElementById("sanji"),
+
+    robin:
+        document.getElementById("robin"),
+
+    luffy:
+        document.getElementById("luffy"),
+
+    nami:
+        document.getElementById("nami"),
+
+    zoro:
+        document.getElementById("zoro"),
+
+    usopp:
+        document.getElementById("usopp"),
+
+    chopper:
+        document.getElementById("chopper"),
+
+    franky:
+        document.getElementById("franky"),
+
+    brook:
+        document.getElementById("brook")
 };
 
-const NORMAL_BGM_VOLUME = 0.35;
-const CHARACTER_VOICE_VOLUME = 0.60;
+
+
+const BGM_VOLUME = 0.10;
+
+const NORMAL_VOICE_VOLUME = 0.60;
+
+const ROBIN_GAIN = 3.0;
+
+
 const START_DELAY = 1500;
+
 const TEXT_SPEED = 25;
 
 let currentDialogue = 0;
-let typing = false;
+
 let typingTimer = null;
+
+let typing = false;
+
 let voicePlaying = false;
+
 let gameStarted = false;
 
-backgroundMusic.volume = NORMAL_BGM_VOLUME;
-voiceAudio.volume = CHARACTER_VOICE_VOLUME;
+
+/* =========================================================
+   WEB AUDIO API
+   Used to amplify Robin
+========================================================= */
+
+let audioContext = null;
+
+let voiceSource = null;
+
+let voiceGain = null;
+
+let audioSystemReady = false;
+
+
+function setupAudioSystem() {
+
+    if (audioSystemReady) {
+        return;
+    }
+
+    const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+    if (!AudioContext) {
+
+        console.warn(
+            "Web Audio API is not supported."
+        );
+
+        return;
+    }
+
+    audioContext = new AudioContext();
+
+    /*
+        The HTML audio element is connected
+        into the Web Audio processing chain.
+    */
+
+    voiceSource =
+        audioContext.createMediaElementSource(
+            voiceAudio
+        );
+
+    voiceGain =
+        audioContext.createGain();
+
+    /*
+        Default gain = 1x
+    */
+
+    voiceGain.gain.value = 1.0;
+
+    voiceSource.connect(voiceGain);
+
+    voiceGain.connect(
+        audioContext.destination
+    );
+
+    audioSystemReady = true;
+}
+
+
+/* =========================================================
+   AUDIO PRELOAD
+========================================================= */
 
 const audioFiles = [
-    "myfairlady.mp3",
+
+    "mayfairlady.mp3",
+
     "luffyoi.mp3",
+
     "robinhahaha.mp3",
+
     "robingreet.mp3",
+
     "sanjinanibirthday.mp3",
+
     "luffycake.mp3",
+
     "brookyohoho.mp3",
+
     "frankysuper.mp3",
+
     "chopperhappybirthday.mp3",
+
     "namialrighteveryone.mp3"
 ];
 
-const audioCache = {};
+audioFiles.forEach(function(file) {
 
-audioFiles.forEach(file => {
-    const audio = new Audio();
+    const audio =
+        new Audio("./" + file);
+
     audio.preload = "auto";
-    audio.src = "./" + file;
-    audioCache[file] = audio;
+
     audio.load();
+
 });
+
+
+/* =========================================================
+   STORY
+========================================================= */
 
 const story = [
 
     {
         character: "Sanji",
-        sprite: "sanji_flirty.png",
+
         characterId: "sanji",
-        text: "My fairrr ladyyyy! How are you today? Did you miss me?",
-        audio: "myfairlady.mp3"
+
+        sprite: "sanji_flirty.png",
+
+        text:
+            "My fairrr ladyyyy! How are you today? Did you miss me?",
+
+        audio:
+            "mayfairlady.mp3"
     },
+
 
     {
         character: "Robin",
+
+        characterId: "robin",
+
         sprite: "robin_neutral.png",
-        characterId: "robin",
-        text: "Sanji, please. Give her some space."
+
+        text:
+            "Sanji, please. Give her some space."
     },
+
 
     {
         character: "Sanji",
+
+        characterId: "sanji",
+
         sprite: "sanji_flirty.png",
-        characterId: "sanji",
-        text: "Robin-chwaaaan, I was simply greeting our lovely guest!"
+
+        text:
+            "Robin-chwaaaan, I was simply greeting our lovely guest!"
     },
+
 
     {
         character: "Robin",
-        sprite: "robin_amused.png",
+
         characterId: "robin",
-        text: "Of course you were."
+
+        sprite: "robin_amused.png",
+
+        text:
+            "Of course you were."
     },
+
 
     {
         character: "Sanji",
-        sprite: "sanji_neutral.png",
+
         characterId: "sanji",
-        text: "Anyway… you seem to be enjoying yourself. The crew has been quite lively today."
+
+        sprite: "sanji_neutral.png",
+
+        text:
+            "Anyway… you seem to be enjoying yourself. The crew has been quite lively today."
     },
+
 
     {
         character: "Robin",
-        sprite: "robin_smiling.png",
+
         characterId: "robin",
-        text: "That's true. Luffy has already eaten half the food Sanji prepared."
+
+        sprite: "robin_smiling.png",
+
+        text:
+            "That's true. Luffy has already eaten half the food Sanji prepared."
     },
+
 
     {
         character: "Luffy",
-        sprite: "luffy_shocked.png",
+
         characterId: "luffy",
-        text: "HEY! I heard that!",
-        audio: "luffyoi.mp3"
+
+        sprite: "luffy_shocked.png",
+
+        text:
+            "HEY! I heard that!",
+
+        audio:
+            "luffyoi.mp3"
     },
+
 
     {
         character: "Sanji",
-        sprite: "sanji_angry.png",
+
         characterId: "sanji",
-        text: "YOU ATE HALF THE FRIDGE, YOU IDIOT!"
+
+        sprite: "sanji_angry.png",
+
+        text:
+            "YOU ATE HALF THE FRIDGE, YOU IDIOT!"
     },
+
 
     {
         character: "Robin",
+
+        characterId: "robin",
+
         sprite: "robin_laughing.png",
-        characterId: "robin",
-        text: "*chuckles* It seems nothing ever changes around here.",
-        audio: "robinhahaha.mp3"
+
+        text:
+            "*chuckles* It seems nothing ever changes around here.",
+
+        audio:
+            "robinhahaha.mp3"
     },
+
 
     {
         character: "Robin",
-        sprite: "robin_amused.png",
+
         characterId: "robin",
-        text: "By the way, today is a special day, isn't it?",
-        choice: true
+
+        sprite: "robin_amused.png",
+
+        text:
+            "By the way, today is a special day, isn't it?",
+
+        choice:
+            true
     },
+
 
     {
         character: "Rose",
-        text: "Special?"
+
+        text:
+            "Special?"
     },
+
 
     {
         character: "Robin",
-        sprite: "robin_smiling.png",
+
         characterId: "robin",
-        text: "Happy Birthday Rose. I hope you have a wonderful day, and that you'll have many more happy memories with the people you care about.",
-        audio: "robingreet.mp3"
+
+        sprite: "robin_smiling.png",
+
+        text:
+            "Happy Birthday Rose. I hope you have a wonderful day, and that you'll have many more happy memories with the people you care about. Mil Fleur.",
+
+        audio:
+            "robingreet.mp3"
     },
 
-    {
-        character: "Robin",
-        sprite: "robin_smiling.png",
-        characterId: "robin",
-        text: "Mil Fleur."
-    },
 
     {
         character: "Sanji",
-        sprite: "sanji_flirty.png",
+
         characterId: "sanji",
-        text: "WHAT?! A BIRTHDAY?! Then allow me to prepare the greatest feast the Thousand Sunny has ever seen!",
-        audio: "sanjinanibirthday.mp3"
+
+        sprite: "sanji_flirty.png",
+
+        text:
+            "WHAT?! A BIRTHDAY?! Then allow me to prepare the greatest feast the Thousand Sunny has ever seen!",
+
+        audio:
+            "sanjinanibirthday.mp3"
     },
+
 
     {
         character: "Sanji",
-        sprite: "sanji_flirty.png",
+
         characterId: "sanji",
-        text: "And don't worry, my fair lady! I'll make sure the cake is magnificent!"
+
+        sprite: "sanji_flirty.png",
+
+        text:
+            "And don't worry, my fair lady! I'll make sure the cake is magnificent!"
     },
+
 
     {
         character: "Luffy",
-        sprite: "luffy_shocked.png",
+
         characterId: "luffy",
-        text: "CAKE?!",
-        audio: "luffycake.mp3"
+
+        sprite: "luffy_shocked.png",
+
+        text:
+            "CAKE?!",
+
+        audio:
+            "luffycake.mp3"
     },
+
 
     {
         character: "Sanji",
-        sprite: "sanji_angry.png",
+
         characterId: "sanji",
-        text: "DON'T YOU DARE TOUCH IT!"
+
+        sprite: "sanji_angry.png",
+
+        text:
+            "DON'T YOU DARE TOUCH IT!"
     },
+
 
     {
         character: "Nami",
-        sprite: "nami_smiling.png",
+
         characterId: "nami",
-        text: "Alright everyone, let's get the celebration started!",
-        audio: "namialrighteveryone.mp3"
+
+        sprite: "nami_smiling.png",
+
+        text:
+            "Alright everyone, let's get the celebration started!",
+
+        audio:
+            "namialrighteveryone.mp3"
     },
+
 
     {
         character: "Zoro",
-        sprite: "zoro_neutral.png",
+
         characterId: "zoro",
-        text: "Hmph. Sounds like a lot of noise."
+
+        sprite: "zoro_neutral.png",
+
+        text:
+            "Hmph. Sounds like a lot of noise."
     },
+
 
     {
         character: "Usopp",
-        sprite: "usopp_talking.png",
+
         characterId: "usopp",
-        text: "Noise? This is a legendary birthday celebration! I'll make sure everyone remembers it!"
+
+        sprite: "usopp_talking.png",
+
+        text:
+            "Noise? This is a legendary birthday celebration! I'll make sure everyone remembers it!"
     },
+
 
     {
         character: "Chopper",
-        sprite: "chopper_happy.png",
+
         characterId: "chopper",
-        text: "Happy Birthday! This is going to be so much fun!",
-        audio: "chopperhappybirthday.mp3"
+
+        sprite: "chopper_happy.png",
+
+        text:
+            "Happy Birthday! This is going to be so much fun!",
+
+        audio:
+            "chopperhappybirthday.mp3"
     },
+
 
     {
         character: "Franky",
-        sprite: "franky_excited.png",
+
         characterId: "franky",
-        text: "SUPER! Let's make this birthday absolutely unforgettable!",
-        audio: "frankysuper.mp3"
+
+        sprite: "franky_excited.png",
+
+        text:
+            "SUPER! Let's make this birthday absolutely unforgettable!",
+
+        audio:
+            "frankysuper.mp3"
     },
+
 
     {
         character: "Brook",
-        sprite: "brook_celebrating.png",
+
         characterId: "brook",
-        text: "Yohohoho! Allow me to provide the music for the celebration!",
-        audio: "brookyohoho.mp3"
+
+        sprite: "brook_celebrating.png",
+
+        text:
+            "Yohohoho! Allow me to provide the music for the celebration!",
+
+        audio:
+            "brookyohoho.mp3"
     },
+
 
     {
         character: "Everyone",
-        text: "HAPPY BIRTHDAY!!"
+
+        text:
+            "HAPPY BIRTHDAY!!"
     }
+
 ];
 
+
+/* =========================================================
+   CHARACTER FUNCTIONS
+========================================================= */
+
 function hideAllCharacters() {
-    Object.values(characters).forEach(character => {
-        character.classList.remove("show");
-        character.classList.remove("active");
-    });
+
+    Object.values(characters).forEach(
+        function(character) {
+
+            character.classList.remove(
+                "show"
+            );
+
+        }
+    );
 }
 
-function showCharacter(characterId, sprite) {
+
+function showCharacter(id, sprite) {
+
     hideAllCharacters();
 
-    if (!characterId || !characters[characterId]) {
+    if (!id || !characters[id]) {
         return;
     }
 
-    const character = characters[characterId];
+    const character =
+        characters[id];
 
-    if (sprite) {
-        character.src = "./images/" + sprite;
-    }
+    character.src =
+        "./images/" + sprite;
 
-    character.classList.add("show");
-    character.classList.add("active");
+    character.classList.add(
+        "show"
+    );
 }
 
-function typeText(text) {
-    clearInterval(typingTimer);
 
-    dialogueText.textContent = "";
-
-    let index = 0;
-    typing = true;
-
-    typingTimer = setInterval(() => {
-        dialogueText.textContent += text.charAt(index);
-        index++;
-
-        if (index >= text.length) {
-            clearInterval(typingTimer);
-            typing = false;
-        }
-    }, TEXT_SPEED);
-}
-
-function finishTyping() {
-    clearInterval(typingTimer);
-
-    if (typing) {
-        dialogueText.textContent = story[currentDialogue].text;
-        typing = false;
-        return true;
-    }
-
-    return false;
-}
+/* =========================================================
+   STOP VOICE
+========================================================= */
 
 function stopVoice() {
+
     voiceAudio.pause();
+
     voiceAudio.currentTime = 0;
-    voicePlaying = false;
+
     voiceAudio.onended = null;
+
+    voicePlaying = false;
 }
 
+
+/* =========================================================
+   PLAY CHARACTER VOICE
+========================================================= */
+
 function playVoice(scene) {
+
     if (!scene.audio) {
-        return;
-    }
-
-    const cachedAudio = audioCache[scene.audio];
-
-    if (!cachedAudio) {
         return;
     }
 
     stopVoice();
 
-    voiceAudio.src = cachedAudio.src;
-    voiceAudio.currentTime = 0;
-    voiceAudio.volume = CHARACTER_VOICE_VOLUME;
+    voiceAudio.src =
+        "./" + scene.audio;
+
+
+    /*
+        Normal characters:
+
+        HTML volume = 60%
+        Gain = 1x
+    */
+
+    voiceAudio.volume =
+        NORMAL_VOICE_VOLUME;
+
+
+    if (voiceGain) {
+
+        /*
+            Robin:
+
+            60% base volume
+            × 2 gain
+
+            = approximately 200%
+            of the normal processed signal
+        */
+
+        if (scene.character === "Robin") {
+
+            voiceGain.gain.value =
+                ROBIN_GAIN;
+
+        } else {
+
+            voiceGain.gain.value =
+                1.0;
+        }
+    }
+
 
     voicePlaying = true;
 
-    const handleVoiceEnd = () => {
-        voicePlaying = false;
-        voiceAudio.onended = null;
-        backgroundMusic.volume = NORMAL_BGM_VOLUME;
-    };
 
-    voiceAudio.onended = handleVoiceEnd;
+    voiceAudio.onended =
+        function() {
 
-    voiceAudio.play().catch(() => {
-        voicePlaying = false;
-        voiceAudio.onended = null;
-        backgroundMusic.volume = NORMAL_BGM_VOLUME;
-    });
+            voicePlaying = false;
+
+            voiceAudio.onended =
+                null;
+
+        };
+
+
+    voiceAudio.play()
+        .catch(
+            function(error) {
+
+                console.warn(
+                    "Voice playback failed:",
+                    error
+                );
+
+                voicePlaying = false;
+
+            }
+        );
 }
 
-function showDialogue() {
-    const scene = story[currentDialogue];
 
-    nameBox.textContent = scene.character;
+/* =========================================================
+   TYPE TEXT
+========================================================= */
+
+function typeText(text) {
+
+    clearInterval(
+        typingTimer
+    );
+
+    dialogueText.textContent =
+        "";
+
+    typing = true;
+
+    let index = 0;
+
+
+    typingTimer =
+        setInterval(
+            function() {
+
+                dialogueText.textContent +=
+                    text.charAt(index);
+
+                index++;
+
+
+                if (
+                    index >=
+                    text.length
+                ) {
+
+                    clearInterval(
+                        typingTimer
+                    );
+
+                    typing = false;
+                }
+
+            },
+            TEXT_SPEED
+        );
+}
+
+
+/* =========================================================
+   FINISH TYPING
+========================================================= */
+
+function finishTyping() {
+
+    if (!typing) {
+        return false;
+    }
+
+    clearInterval(
+        typingTimer
+    );
+
+    dialogueText.textContent =
+        story[currentDialogue].text;
+
+    typing = false;
+
+    return true;
+}
+
+
+/* =========================================================
+   SHOW DIALOGUE
+========================================================= */
+
+function showDialogue() {
+
+    const scene =
+        story[currentDialogue];
+
+
+    nameBox.textContent =
+        scene.character;
+
 
     if (scene.characterId) {
+
         showCharacter(
             scene.characterId,
             scene.sprite
         );
+
     } else {
+
         hideAllCharacters();
+
     }
 
-    choiceArea.classList.remove("show");
 
-    typeText(scene.text);
+    typeText(
+        scene.text
+    );
+
 
     if (scene.audio) {
-        playVoice(scene);
+
+        playVoice(
+            scene
+        );
+
+    } else {
+
+        stopVoice();
+
+    }
+
+
+    if (scene.choice === true) {
+
+        choiceArea.classList.add(
+            "show"
+        );
+
+    } else {
+
+        choiceArea.classList.remove(
+            "show"
+        );
+
     }
 }
 
+
+/* =========================================================
+   NEXT DIALOGUE
+========================================================= */
+
 function nextDialogue() {
+
     if (!gameStarted) {
         return;
     }
+
+
+    /*
+        Don't allow the dialogue box
+        to bypass SPECIAL?
+    */
+
+    if (
+        choiceArea.classList.contains(
+            "show"
+        )
+    ) {
+
+        return;
+    }
+
+
+    /*
+        First click finishes
+        text animation.
+    */
+
+    if (
+        finishTyping()
+    ) {
+
+        return;
+    }
+
+
+    /*
+        Don't skip voice lines.
+    */
 
     if (voicePlaying) {
         return;
     }
 
-    if (finishTyping()) {
-        return;
-    }
-
-    const currentScene = story[currentDialogue];
-
-    if (currentScene.choice) {
-        return;
-    }
 
     currentDialogue++;
 
-    if (currentDialogue >= story.length) {
+
+    if (
+        currentDialogue >=
+        story.length
+    ) {
+
         showEnding();
+
         return;
     }
+
 
     showDialogue();
 }
 
+
+/* =========================================================
+   ENDING
+========================================================= */
+
 function showEnding() {
-    dialogueArea.style.display = "none";
-    choiceArea.classList.remove("show");
-    hideAllCharacters();
 
-    ending.classList.add("show");
-}
-
-function startMusic() {
-    backgroundMusic.currentTime = 0;
-    backgroundMusic.volume = NORMAL_BGM_VOLUME;
-
-    const musicPromise = backgroundMusic.play();
-
-    if (musicPromise) {
-        musicPromise.catch(() => {});
-    }
-}
-
-function resetGame() {
-    clearInterval(typingTimer);
+    clearInterval(
+        typingTimer
+    );
 
     stopVoice();
 
-    backgroundMusic.pause();
-    backgroundMusic.currentTime = 0;
-    backgroundMusic.volume = NORMAL_BGM_VOLUME;
+    dialogueArea.style.display =
+        "none";
 
-    currentDialogue = 0;
-    typing = false;
-    gameStarted = false;
-
-    dialogueText.textContent = "";
-    dialogueArea.style.display = "none";
-    choiceArea.classList.remove("show");
-    ending.classList.remove("show");
+    choiceArea.classList.remove(
+        "show"
+    );
 
     hideAllCharacters();
+
+    ending.classList.add(
+        "show"
+    );
 }
 
-function returnHome() {
-    resetGame();
 
-    titleScreen.classList.remove("hidden");
-    loadingMessage.classList.remove("show");
-    playButton.disabled = false;
-}
+/* =========================================================
+   START GAME
+========================================================= */
 
-playButton.addEventListener("click", () => {
+function startGame() {
+
     if (gameStarted) {
         return;
     }
 
-    playButton.disabled = true;
-    loadingMessage.classList.add("show");
 
-    startMusic();
+    playButton.disabled =
+        true;
 
-    setTimeout(() => {
-        gameStarted = true;
 
-        titleScreen.classList.add("hidden");
-        loadingMessage.classList.remove("show");
+    loadingMessage.classList.add(
+        "show"
+    );
 
-        dialogueArea.style.display = "block";
 
-        currentDialogue = 0;
+    /*
+        Create audio system
+        after the user's button click.
+    */
+
+    setupAudioSystem();
+
+
+    /*
+        Resume AudioContext.
+    */
+
+    if (
+        audioContext &&
+        audioContext.state === "suspended"
+    ) {
+
+        audioContext.resume();
+
+    }
+
+
+    /*
+        BGM = 10%
+    */
+
+    backgroundMusic.volume =
+        BGM_VOLUME;
+
+    backgroundMusic.currentTime =
+        0;
+
+
+    backgroundMusic.play()
+        .catch(
+            function(error) {
+
+                console.warn(
+                    "BGM playback failed:",
+                    error
+                );
+
+            }
+        );
+
+
+    /*
+        Small loading pause
+        so the first voice has
+        time to prepare.
+    */
+
+    setTimeout(
+        function() {
+
+            gameStarted =
+                true;
+
+            titleScreen.classList.add(
+                "hidden"
+            );
+
+            dialogueArea.style.display =
+                "block";
+
+            loadingMessage.classList.remove(
+                "show"
+            );
+
+            currentDialogue =
+                0;
+
+            showDialogue();
+
+        },
+        START_DELAY
+    );
+}
+
+
+/* =========================================================
+   RESET GAME
+========================================================= */
+
+function resetGame() {
+
+    clearInterval(
+        typingTimer
+    );
+
+
+    stopVoice();
+
+
+    backgroundMusic.pause();
+
+    backgroundMusic.currentTime =
+        0;
+
+    backgroundMusic.volume =
+        BGM_VOLUME;
+
+
+    /*
+        Reset Robin's gain
+    */
+
+    if (voiceGain) {
+
+        voiceGain.gain.value =
+            1.0;
+
+    }
+
+
+    currentDialogue =
+        0;
+
+    typing =
+        false;
+
+    voicePlaying =
+        false;
+
+    gameStarted =
+        false;
+
+
+    dialogueText.textContent =
+        "";
+
+
+    dialogueArea.style.display =
+        "none";
+
+
+    choiceArea.classList.remove(
+        "show"
+    );
+
+
+    ending.classList.remove(
+        "show"
+    );
+
+
+    hideAllCharacters();
+
+
+    titleScreen.classList.remove(
+        "hidden"
+    );
+
+
+    loadingMessage.classList.remove(
+        "show"
+    );
+
+
+    playButton.disabled =
+        false;
+}
+
+
+/* =========================================================
+   BUTTON EVENTS
+========================================================= */
+
+playButton.addEventListener(
+    "click",
+    function(event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+        startGame();
+
+    }
+);
+
+
+dialogueBox.addEventListener(
+    "click",
+    function(event) {
+
+        event.preventDefault();
+
+        nextDialogue();
+
+    }
+);
+
+
+specialButton.addEventListener(
+    "click",
+    function(event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        if (!gameStarted) {
+            return;
+        }
+
+
+        choiceArea.classList.remove(
+            "show"
+        );
+
+
+        currentDialogue++;
+
 
         showDialogue();
 
-    }, START_DELAY);
-});
-
-dialogueBox.addEventListener("click", nextDialogue);
-
-specialButton.addEventListener("click", () => {
-    if (!gameStarted || voicePlaying) {
-        return;
     }
+);
 
-    choiceArea.classList.remove("show");
 
-    currentDialogue++;
+homeButton.addEventListener(
+    "click",
+    function(event) {
 
-    showDialogue();
-});
+        event.preventDefault();
 
-homeButton.addEventListener("click", returnHome);
+        event.stopPropagation();
+
+        resetGame();
+
+    }
+);
+
+
+/* =========================================================
+   STOP AUDIO WHEN PAGE IS CLOSED
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function() {
+
+        backgroundMusic.pause();
+
+        voiceAudio.pause();
+
+    }
+);
+
+
+/* =========================================================
+   STOP AUDIO WHEN PAGE IS HIDDEN
+   Messenger/browser behavior
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    function() {
+
+        if (document.hidden) {
+
+            backgroundMusic.pause();
+
+            voiceAudio.pause();
+
+        }
+
+    }
+);
 
 </script>
 
